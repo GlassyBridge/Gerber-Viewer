@@ -1,7 +1,5 @@
 import { createParser } from '@tracespace/parser';
-import { getReady } from './getReady.js';
-// import { render } from '@tracespace/renderer';
-// import { plot } from '@tracespace/plotter';
+import { getLayers } from './getReady.js';
 
 const gerberInput = document.getElementById('gerber-input');
 const sceneContainer = document.getElementById('scene-container');
@@ -27,7 +25,7 @@ gerberInput.addEventListener('change', async e => {
             parser.feed(content);
             return parser.results().children;
         });
-        
-        getReady(parsedCommandsArray, fileNames);
+
+        const layers = getLayers(parsedCommandsArray, fileNames);
     }
 });
