@@ -24,26 +24,44 @@ function resolveModifier(modifier, toolParams) {
     return null;
 }
 
+function extractFileFunction(commentString) {
+    if (commentString.startsWith('#@! TF.FileFunction,')) {
+        const functionArray = commentString.substring('#@! TF.FileFunction,'.length).split(',');
+        const functionObj = {
+            function: functionArray[0],
+            side: functionArray.at(-1),
+            attributes: functionArray.slice(1, functionArray.length - 1)
+        }
+        return functionObj;
+    }
+
+    return null;
+}
+
 export function getLayers(commandsArray, fileNames) {
     const layers = {};
 
     commandsArray.forEach((commands, index) => {
         const toolDefinitions = {};
         const toolMacros = {};
+        let fileFunction = null;
 
         // First loop to set the values of both variables.
         for (const command of commands) {
-            if (command.type === 'toolDefinition') {
+            if (command.type === 'comment') {
+                const functionObj = extractFileFunction(command.comment);
+                if (functionObj) {
+                    fileFunction = functionObj;
+                }
+            } else if (command.type === 'toolDefinition') {
                 toolDefinitions[command.code] = command.shape;
-            }
-            if (command.type === 'toolMacro') {
+            } else if (command.type === 'toolMacro') {
                 const macroPrimitives = command.children.filter(child => child.type === 'macroPrimitive');
                 toolMacros[command.name] = {
                     primitives: macroPrimitives
                 };
             }
         }
-
         // Second loop on toolDefinitions to resolve the place holders in toolMacros.
         for (const toolCode in toolDefinitions) {
             const tool = toolDefinitions[toolCode];
@@ -67,13 +85,28 @@ export function getLayers(commandsArray, fileNames) {
                 macro.primitives = resolvedPrimitives;
             }
         }
-        
         const fileName = fileNames[index];
-        layers[fileName ? fileName : `layer ${index}`] = {
+        layers[fileName ? fileName : `${fileFunction.function}-${fileFunction.side}`] = {
+            fileFunction: fileFunction,
             toolDefinitions: toolDefinitions,
             toolMacros: toolMacros
         };
     });
 
     return layers;
+}
+
+function renderLayers(layerData, commandsArray) {
+    let currentToolCode = null;
+    const toolDefinitions = layerData.toolDefinitions;
+
+    for (const command of commandsArray) {
+        if (command.type === 'toolChange') {
+            currentToolCode = command.code;
+        } else if (command.type === 'graphic') {
+            if (currentToolCode) {
+                const tool = toolDefinitions[currentToolCode];
+            }
+        }
+    }
 }

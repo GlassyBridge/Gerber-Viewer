@@ -26,6 +26,6 @@ gerberInput.addEventListener('change', async e => {
             return parser.results().children;
         });
 
-        const layers = getLayers(parsedCommandsArray, fileNames);
+        getLayers(parsedCommandsArray, fileNames);
     }
 });
