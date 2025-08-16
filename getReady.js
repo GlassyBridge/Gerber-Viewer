@@ -93,6 +93,7 @@ export function getLayers(commandsArray, fileNames) {
         // Layer.
         const fileName = fileNames[index];
         layers[fileName ? fileName : `${fileFunction.function}-${fileFunction.side}`] = {
+            fileType: commands.filetype,
             fileFunction: fileFunction,
             commands: commands,
             toolDefinitions: toolDefinitions,
@@ -157,9 +158,15 @@ function drawRect() {
 
 function drawMacro(x, y, macro) {
     if (macro) {
-        const primitives = macro.primitives;
-        for (const primitive of primitives){
-            //empty for now
+        for (const primitive of macro.primitives){
+            drawPrimitive(primitive, x, y);
         }
+    }
+}
+
+function drawPrimitive(primitive, x, y) {
+    switch (primitive.type) {
+        case 'circle':
+            drawCircle(x, y);
     }
 }

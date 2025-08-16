@@ -1,4 +1,4 @@
-import { createParser } from '@tracespace/parser';
+import { parse } from './parser.js';
 import { getLayers, renderLayer } from './getReady.js';
 
 const gerberInput = document.getElementById('gerber-input');
@@ -21,9 +21,7 @@ gerberInput.addEventListener('change', async e => {
 
         const fileContents = await Promise.all(filePromises);
         const parsedCommandsArray = fileContents.map(content => {
-            const parser = createParser();
-            parser.feed(content);
-            return parser.results().children;
+            return parse(content);
         });
 
         const layers = getLayers(parsedCommandsArray, fileNames);
