@@ -3,7 +3,7 @@ import { createParser } from '@tracespace/parser';
 function getPrimitiveName(code) {
     const primitiveMap = {
         '1': 'circle',
-        '2': 'vectorLine',
+        '2': 'line',
         '4': 'outline',
         '5': 'polygon',
         '20': 'rectangle',
