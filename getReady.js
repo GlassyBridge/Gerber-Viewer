@@ -76,13 +76,15 @@ export function getLayers(commandsArray, fileNames) {
                 const toolParams = tool.params; // Holds parameters.
 
                 const macroPrimitives = macro.primitives;
-                const resolvedPrimitives = macroPrimitives.map(primitive => {
-                    const resolvedModifiers = primitive.modifiers.map(modifier => {
+                const resolvedPrimitives = macroPrimitives.map(macroPrimitive => {
+                    // Return resolved modifiers.
+                    const resolvedModifiers = macroPrimitive.modifiers.map(modifier => {
                         return resolveModifier(modifier, toolParams);
                     });
                     // Return object containing the code and resolved modifiers.
                     return {
-                        code: primitive.code,
+                        name: macroPrimitive.name,
+                        code: macroPrimitive.code,
                         modifiers: resolvedModifiers
                     };
                 });
@@ -140,11 +142,15 @@ function drawShape(tool, x, y, macro) {
         case 'rectangle':
             drawRect(); // empty
             break;
+        case 'obround':
+            //empty
+            break;
         case 'macroShape':
             drawMacro(x, y, macro); //empty
             break;
         default:
-            console.warn('IDK this shape.');
+            console.warn('IDK this shape.', tool.type);
+            break;
     }
 }
 
@@ -165,8 +171,27 @@ function drawMacro(x, y, macro) {
 }
 
 function drawPrimitive(primitive, x, y) {
-    switch (primitive.type) {
-        case 'circle':
+    switch (primitive.name) {
+        case 'circle': // code 1
             drawCircle(x, y);
+            break;
+        case 'line': // code 2
+            // draw line.
+            break;
+        case 'outline': // code 4
+            // draw outline.
+            break;
+        case 'polygon': // code 5
+            // draw polygon.
+            break;
+        case 'rectangle': // code 20
+            drawRect();
+            break;
+        case 'obround': // code 21
+            // draw polygon?
+            break;
+        default:
+            console.warn(`IDK this primitive: ${primitive}\n`, primitive.code, primitive.name);
+            break;
     }
 }

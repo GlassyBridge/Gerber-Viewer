@@ -1,6 +1,6 @@
 import { createParser } from '@tracespace/parser';
 
-function getPrimitiveName(code) {
+function primitiveName(code) {
     const primitiveMap = {
         '1': 'circle',
         '2': 'line',
@@ -14,19 +14,46 @@ function getPrimitiveName(code) {
     return primitiveMap[code] || unsupported;
 }
 
-// I don't think it's best practice but it gets the job done.
-function addMacroPrimitiveTypes(children) {
-    for (const command in children) {
+function macroPrimitiveTypes(children) {
+    children.forEach((command) => {
         if (command.type === 'toolMacro') {
-            for (const child of command.children) {
-                if (command.type === 'macroPrimitive') {
-                    child['name'] = getPrimitiveName(command.code);
+            command.children.forEach((child) => {
+                if (child.type === 'macroPrimitive') {
+                    child.name = primitiveName(child.code);
                 }
-            }
+            });
         }
-    }
+    });
 
     return children;
+}
+
+// Temporary fix for the new X3 format.
+function temporaryFix(gerberString) {
+    if (gerberString.includes('%T')) {
+        const lines = gerberString.split('\n');
+        const modifiedLines = [];
+        for (const line of lines) {
+            if (line.startsWith('%T')) {
+                // Replace '%' with 'G04 #@! '.
+                let modifiedLine = line.replace('%', 'G04 #@! ');
+                
+                // Replace '*%' at the end with '*'.
+                if (modifiedLine.endsWith('*%')) {
+                    modifiedLine = modifiedLine.slice(0, -1);
+                }
+                
+                modifiedLines.push(modifiedLine);
+            } else {
+                // Don't change the other lines.
+                modifiedLines.push(line);
+            }
+        }
+        // Return modified string.
+        return modifiedLines.join('\n');
+    }
+    // Return original string/file.
+    return gerberString;
 }
 
 /**
@@ -43,9 +70,15 @@ function addMacroPrimitiveTypes(children) {
  * @category Parser
  */
 export function parse(content) {
+    // The newer gerber format isn't supported by @tracespace/parser so changing them to commands.
+    content = temporaryFix(content);
+
     const parser = createParser();
     parser.feed(content);
     const tree = parser.results();
+
     tree.children.filetype = tree.filetype;
-    return addMacroPrimitiveTypes(tree.children);
+    const parsedData = macroPrimitiveTypes(tree.children);
+
+    return parsedData;
 }
