@@ -51,8 +51,8 @@ export function renderLayer(layerData) {
                     lastY = y;
                 } else if (graphic === 'segment') {
                     svg.append(drawLine(lastX, lastY, x, y, tool.diameter));
-                    lastX = null;
-                    lastY = null;
+                    lastX = x;
+                    lastY = y;
                 }
             }
         }
@@ -167,6 +167,7 @@ function drawPolygon(x, y, vertices, fill = 'black') {
     polygon.setAttribute('points', points);
     polygon.setAttribute('fill', fill);
     polygon.setAttribute('stroke', 'none');
+
     return polygon;
 }
 
