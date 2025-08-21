@@ -145,7 +145,7 @@ function drawLine(startX, startY, endX, endY, width, fill = 'black') {
     return line;
 }
 
-function drawOutline(x, y, vertices) {
+function drawOutline(x, y, vertices, fill = 'black') {
     const polyline = document.createElementNS(svgNS, 'polyline');
 
     // Addiing global x and y offsets to verticies.
@@ -153,7 +153,7 @@ function drawOutline(x, y, vertices) {
     
     polyline.setAttribute('points', points);
     polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', 'black');
+    polyline.setAttribute('stroke', fill);
 
     return polyline;
 }
@@ -166,7 +166,7 @@ function drawPolygon(x, y, vertices, fill = 'black') {
     
     polygon.setAttribute('points', points);
     polygon.setAttribute('fill', fill);
-    polygon.setAttribute('stroke', 'black');
+    polygon.setAttribute('stroke', 'none');
     return polygon;
 }
 
