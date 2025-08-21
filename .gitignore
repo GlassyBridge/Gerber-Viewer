@@ -1,3 +1,5 @@
 node_modules/
 exampleGerber.json
 exampleOutput.json
+exampleGerber2.json
+.DS_Store

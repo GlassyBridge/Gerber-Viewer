@@ -1,8 +1,10 @@
 import { parse } from './parser.js';
-import { getLayers, renderLayer } from './getReady.js';
+import { getLayers } from './getReady.js';
+import { renderLayer } from "./renderLayer.js";
 
 const gerberInput = document.getElementById('gerber-input');
 const sceneContainer = document.getElementById('scene-container');
+export const svg = document.getElementById('svg');
 
 gerberInput.addEventListener('change', async e => {
     const files = e.target.files;
