@@ -21,11 +21,13 @@ const svgNS = "http://www.w3.org/2000/svg";
 
 // A function that handles the rendering of a single layer.
 export function renderLayer(layerData) {
-    let currentToolCode = null;
     const precision = Math.pow(10, layerData.precision);
     const toolDefinitions = layerData.toolDefinitions;
     const toolMacros = layerData.toolMacros;
     const commands = layerData.commands;
+    let currentToolCode = null;
+    let lastX = null;
+    let lastY = null;
 
     for (const command of commands) {
         // Handles tool change.
@@ -34,28 +36,34 @@ export function renderLayer(layerData) {
         }
         //Handles drawing.
         if (command.type === 'graphic') {
+            const x = parseFloat(command.coordinates.x) / precision;
+            const y = parseFloat(command.coordinates.y) / precision;
             if (currentToolCode) {
                 const tool = toolDefinitions[currentToolCode];
-                if (tool) {
+                const graphic = command.graphic;
+                if (graphic === 'shape') {
                     if (tool.type === 'macroShape')
-                        svg.appendChild(drawShape(tool, command.coordinates.x / precision, command.coordinates.y / precision, toolMacros[tool.name]));
+                        svg.appendChild(drawShape(tool, x, y, toolMacros[tool.name]));
                     else
-                        svg.appendChild(drawShape(tool, command.coordinates.x / precision, command.coordinates.y / precision, null));
-
+                        svg.appendChild(drawShape(tool, x, y, null));
+                } else if (graphic === 'move') {
+                    lastX = x;
+                    lastY = y;
+                } else if (graphic === 'segment') {
+                    svg.append(drawLine(lastX, lastY, x, y, tool.diameter));
+                    lastX = null;
+                    lastY = null;
                 }
             }
         }
     }
-
-    console.log(svg);
 }
 
-function drawShape(tool, coordX, coordY, macro = null) {
-    const x = parseFloat(coordX);
-    const y = parseFloat(coordY);
+function drawShape(tool, x, y, macro = null) {
     switch (tool.type) {
         case 'circle':
-            return drawCircle(x, y, tool.diameter);
+            const circle = drawCircle(x, y, tool.diameter);
+            return circle;
         case 'rectangle':
             return drawRect(x, y, tool.xSize, tool.ySize, 0);
         case 'obround':
@@ -112,13 +120,15 @@ function drawPrimitive(primitive, x, y) {
     }
 }
 
-function drawCircle(x, y, diameter, fill = 'none') {
+function drawCircle(x, y, diameter, fill = 'black') {
     const circle = document.createElementNS(svgNS, 'circle');
+
     circle.setAttribute('cx', x);
     circle.setAttribute('cy', y);
     circle.setAttribute('r', diameter / 2);
     circle.setAttribute('fill', fill);
-    circle.setAttribute('stroke', 'black');
+    circle.setAttribute('stroke', 'none');
+
     return circle;
 }
 
@@ -169,7 +179,7 @@ function drawRect(centerX, centerY, width, height, rotation, fill = 'black') {
     rect.setAttribute('height', Math.abs(height));
     rect.setAttribute('transform', `rotate(${rotation}, ${centerX}, ${centerY})`);
     rect.setAttribute('fill', fill);
-    rect.setAttribute('stroke', 'black');
+    rect.setAttribute('stroke', 'none');
 
     return rect;
 }
