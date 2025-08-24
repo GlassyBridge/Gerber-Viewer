@@ -28,7 +28,7 @@ function macroPrimitiveTypes(children) {
     return children;
 }
 
-// Temporary fix for the new X3 format.
+// Temporary fix for X3 format.
 function temporaryFix(gerberString) {
     if (gerberString.includes('%T')) {
         const lines = gerberString.split('\n');

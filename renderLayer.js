@@ -1,11 +1,14 @@
-import { svg } from './script.js';
 // #region RenderLayer
-
 /**
- *   |\  /|   /\   |¯¯¯¯ |¯¯¯¯\ |¯¯¯¯| |¯¯¯¯\ |¯¯¯¯\ --|-- |\  /| --|-- --|-- --|-- \    / |¯¯¯¯ /¯¯¯¯
- *   | \/ |  /__\  |     |----/ |    | |––––/ |----/   |   | \/ |   |     |     |    \  /  |---- \---\
- *   |    | /    \ |____ |    \ |____| |      |    \ __|__ |    | __|__   |   __|__   \/   |____  ___/ and their modifiers
- * .
+ *   
+ * ███╗░░░███╗░█████╗░░█████╗░██████╗░░█████╗░██████╗░██████╗░██╗███╗░░░███╗██╗████████╗██╗██╗░░░██╗███████╗░██████╗
+ * ████╗░████║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║████╗░████║██║╚══██╔══╝██║██║░░░██║██╔════╝██╔════╝
+ * ██╔████╔██║███████║██║░░╚═╝██████╔╝██║░░██║██████╔╝██████╔╝██║██╔████╔██║██║░░░██║░░░██║╚██╗░██╔╝█████╗░░╚█████╗░
+ * ██║╚██╔╝██║██╔══██║██║░░██╗██╔══██╗██║░░██║██╔═══╝░██╔══██╗██║██║╚██╔╝██║██║░░░██║░░░██║░╚████╔╝░██╔══╝░░░╚═══██╗
+ * ██║░╚═╝░██║██║░░██║╚█████╔╝██║░░██║╚█████╔╝██║░░░░░██║░░██║██║██║░╚═╝░██║██║░░░██║░░░██║░░╚██╔╝░░███████╗██████╔╝
+ * ╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░╚═╝░░╚═╝╚═╝╚═╝░░░░░╚═╝╚═╝░░░╚═╝░░░╚═╝░░░╚═╝░░░╚══════╝╚═════╝░ and their modifiers.
+ * jhuhjhjhjhjhjh
+ *  _____________________________________________________________________________________
  *  | Code  | Name          | Modifiers                                                 |
  *  |-------|---------------|-----------------------------------------------------------|
  *  | 1     | circle        | [exposure, diameter, center-x, center-y]                  |
@@ -14,13 +17,13 @@ import { svg } from './script.js';
  *  | 5     | polygon       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation] |
  *  | 20    | rectangle     | [exposure, x-size, y-size, center-x, center-y, rotation]  |
  *  | 21    | obround       | [exposure, x-size, y-size, center-x, center-y, rotation]  |
+ *  -------------------------------------------------------------------------------------
  */
-
 
 const svgNS = "http://www.w3.org/2000/svg";
 
 // A function that handles the rendering of a single layer.
-export function renderLayer(layerData) {
+export function renderLayer(layerData, svg) {
     const precision = Math.pow(10, layerData.precision);
     const toolDefinitions = layerData.toolDefinitions;
     const toolMacros = layerData.toolMacros;
@@ -42,15 +45,17 @@ export function renderLayer(layerData) {
                 const tool = toolDefinitions[currentToolCode];
                 const graphic = command.graphic;
                 if (graphic === 'shape') {
-                    if (tool.type === 'macroShape')
+                    if (tool.type === 'macroShape') {
                         svg.appendChild(drawShape(tool, x, y, toolMacros[tool.name]));
+                        console.log(tool.name);
+                    }
                     else
                         svg.appendChild(drawShape(tool, x, y, null));
                 } else if (graphic === 'move') {
                     lastX = x;
                     lastY = y;
                 } else if (graphic === 'segment') {
-                    svg.append(drawLine(lastX, lastY, x, y, tool.diameter));
+                    svg.appendChild(drawLine(lastX, lastY, x, y, tool.diameter));
                     lastX = x;
                     lastY = y;
                 }
@@ -62,8 +67,7 @@ export function renderLayer(layerData) {
 function drawShape(tool, x, y, macro = null) {
     switch (tool.type) {
         case 'circle':
-            const circle = drawCircle(x, y, tool.diameter);
-            return circle;
+            return  drawCircle(x, y, tool.diameter);
         case 'rectangle':
             return drawRect(x, y, tool.xSize, tool.ySize, 0);
         case 'obround':
@@ -85,9 +89,11 @@ function drawMacro(x, y, macro) {
     const macroShape = document.createElementNS(svgNS, 'g');
 
     if (macro)
+        console.log(macro);
         for (const primitive of macro.primitives) {
             const shape = drawPrimitive(primitive, x, y);
             if(shape)
+                shape.setAttribute('name', primitive.name);
                 macroShape.appendChild(shape);
         }
 
