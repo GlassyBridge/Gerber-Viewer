@@ -108,7 +108,6 @@ export function getLayers(commandsArray, fileNames) {
         };
     });
     // Return layers object.
-    console.log(layers);
     return layers;
 }
 // #endregion

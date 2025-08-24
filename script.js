@@ -1,10 +1,12 @@
+import svgPanZoom from 'svg-pan-zoom';
 import { parse } from './parser.js';
 import { getLayers } from './getLayers.js';
 import { renderLayer} from "./renderLayer.js";
 
 const gerberInput = document.getElementById('gerber-input');
-const sceneContainer = document.getElementById('scene-container');
-const svg = document.getElementById('svg');
+const svg = svgPanZoom('#svg');
+const viewPort = document.querySelector('.svg-pan-zoom_viewport');
+
 
 gerberInput.addEventListener('change', async e => {
     const files = e.target.files;
@@ -29,7 +31,7 @@ gerberInput.addEventListener('change', async e => {
         const layers = getLayers(parsedCommandsArray, fileNames);
         for (const layerName in layers) {
             const layer = layers[layerName];
-            renderLayer(layer, svg);
+            renderLayer(layer, viewPort);
         }
     }
 });

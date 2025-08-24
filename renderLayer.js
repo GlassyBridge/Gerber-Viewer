@@ -46,7 +46,6 @@ export function renderLayer(layerData, svg) {
                 if (graphic === 'shape') {
                     if (tool.type === 'macroShape') {
                         svg.appendChild(drawShape(tool, x, y, toolMacros[tool.name]));
-                        console.log(tool.name);
                     }
                     else
                         svg.appendChild(drawShape(tool, x, y, null));
@@ -70,14 +69,14 @@ function drawShape(tool, x, y, macro = null) {
         case 'rectangle':
             return drawRect(x, y, tool.xSize, tool.ySize, 0);
         case 'obround':
-            console.log('you have to draw an obround with:', tool);
-            return drawRect(x, y, tool.xSize, tool.ySize, 0);
+            return drawObround(x, y, tool.xSize, tool.ySize, 0);
         case 'macroShape':
             if (macro)
                 return drawMacro(x, y, macro);
-            else
+            else {
                 console.error('No macro given');
                 return null;
+            }
         default:
             console.warn(`This shape with code ${tool.code} and name ${tool.type} isn't known:\n ${tool}`);
             return null;
@@ -87,14 +86,14 @@ function drawShape(tool, x, y, macro = null) {
 function drawMacro(x, y, macro) {
     const macroShape = document.createElementNS(svgNS, 'g');
 
-    if (macro)
-        console.log(macro);
+    if (macro) {
         for (const primitive of macro.primitives) {
             const shape = drawPrimitive(primitive, x, y);
             if(shape)
                 shape.setAttribute('name', primitive.name);
                 macroShape.appendChild(shape);
         }
+    }
 
     return macroShape;
 }
