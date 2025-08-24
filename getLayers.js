@@ -61,6 +61,7 @@ export function getLayers(commandsArray, fileNames) {
             } else if (command.type === 'toolMacro') {
                 const macroPrimitives = command.children.filter(child => child.type === 'macroPrimitive');
                 toolMacros[command.name] = {
+                    macroName: command.name,
                     primitives: macroPrimitives
                 };
             } else if (command.type === 'comment') {

@@ -22,14 +22,18 @@
 const svgNS = "http://www.w3.org/2000/svg";
 
 // A function that handles the rendering of a single layer.
-export function renderLayer(layerData, svg) {
+export function renderLayer(layerData) {
+    // Constant values from the layer Data.
     const precision = Math.pow(10, layerData.precision);
     const toolDefinitions = layerData.toolDefinitions;
     const toolMacros = layerData.toolMacros;
     const commands = layerData.commands;
+    // Variable variables  (¯\_(ツ)_/¯) for drawing shapes.
     let currentToolCode = null;
     let lastX = null;
     let lastY = null;
+    // Layer html object.
+    const layer = document.createElementNS(svgNS, 'g');
 
     for (const command of commands) {
         // Handles tool change.
@@ -44,22 +48,22 @@ export function renderLayer(layerData, svg) {
                 const tool = toolDefinitions[currentToolCode];
                 const graphic = command.graphic;
                 if (graphic === 'shape') {
-                    if (tool.type === 'macroShape') {
-                        svg.appendChild(drawShape(tool, x, y, toolMacros[tool.name]));
-                    }
+                    if (tool.type === 'macroShape')
+                        layer.appendChild(drawShape(tool, x, y, toolMacros[tool.name]));
                     else
-                        svg.appendChild(drawShape(tool, x, y, null));
+                        layer.appendChild(drawShape(tool, x, y, null));
                 } else if (graphic === 'move') {
                     lastX = x;
                     lastY = y;
                 } else if (graphic === 'segment') {
-                    svg.appendChild(drawLine(lastX, lastY, x, y, tool.diameter));
+                    layer.appendChild(drawLine(lastX, lastY, x, y, tool.diameter));
                     lastX = x;
                     lastY = y;
                 }
             }
         }
     }
+    return layer;
 }
 
 function drawShape(tool, x, y, macro = null) {
@@ -85,13 +89,13 @@ function drawShape(tool, x, y, macro = null) {
 
 function drawMacro(x, y, macro) {
     const macroShape = document.createElementNS(svgNS, 'g');
-
     if (macro) {
         for (const primitive of macro.primitives) {
             const shape = drawPrimitive(primitive, x, y);
-            if(shape)
-                shape.setAttribute('name', primitive.name);
+            if (shape) {
+                shape.setAttribute('data-name', primitive.name);
                 macroShape.appendChild(shape);
+            }
         }
     }
 

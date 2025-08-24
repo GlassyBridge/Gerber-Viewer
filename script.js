@@ -4,7 +4,7 @@ import { getLayers } from './getLayers.js';
 import { renderLayer} from "./renderLayer.js";
 
 const gerberInput = document.getElementById('gerber-input');
-const svg = svgPanZoom('#svg');
+const viewSettings = svgPanZoom('#svg');
 const viewPort = document.querySelector('.svg-pan-zoom_viewport');
 
 
@@ -31,7 +31,7 @@ gerberInput.addEventListener('change', async e => {
         const layers = getLayers(parsedCommandsArray, fileNames);
         for (const layerName in layers) {
             const layer = layers[layerName];
-            renderLayer(layer, viewPort);
+            viewPort.appendChild(renderLayer(layer));
         }
     }
 });
