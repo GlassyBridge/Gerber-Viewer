@@ -11,8 +11,7 @@
  *  |-------|---------------|-------------------------------------------------------------------------|
  *  | 1     | circle        | [exposure, diameter, center-x, center-y]                                |
  *  | 2     | line          | [exposure, start-x, start-y, end-x, end-y, width]                       |
- *  | 4     | outline       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation]               |
- *  | 5     | polygon       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation]               |
+ *  | 4     | polygon       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation]               |
  *  | 20    | rectangle     | [exposure, x-size, y-size, center-x, center-y, rotation]                |
  *  | 21    | obround       | [exposure, x-size, y-size, center-x, center-y, rotation]                |
  *  ---------------------------------------------------------------------------------------------------
