@@ -1,22 +1,21 @@
 // #region RenderLayer
-/**
- *   
+/*
  * ███╗░░░███╗░█████╗░░█████╗░██████╗░░█████╗░██████╗░██████╗░██╗███╗░░░███╗██╗████████╗██╗██╗░░░██╗███████╗░██████╗
  * ████╗░████║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║████╗░████║██║╚══██╔══╝██║██║░░░██║██╔════╝██╔════╝
  * ██╔████╔██║███████║██║░░╚═╝██████╔╝██║░░██║██████╔╝██████╔╝██║██╔████╔██║██║░░░██║░░░██║╚██╗░██╔╝█████╗░░╚█████╗░
  * ██║╚██╔╝██║██╔══██║██║░░██╗██╔══██╗██║░░██║██╔═══╝░██╔══██╗██║██║╚██╔╝██║██║░░░██║░░░██║░╚████╔╝░██╔══╝░░░╚═══██╗
  * ██║░╚═╝░██║██║░░██║╚█████╔╝██║░░██║╚█████╔╝██║░░░░░██║░░██║██║██║░╚═╝░██║██║░░░██║░░░██║░░╚██╔╝░░███████╗██████╔╝
  * ╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░╚═╝░░╚═╝╚═╝╚═╝░░░░░╚═╝╚═╝░░░╚═╝░░░╚═╝░░░╚═╝░░░╚══════╝╚═════╝░ and their modifiers.
- *  _____________________________________________________________________________________
- *  | Code  | Name          | Modifiers                                                 |
- *  |-------|---------------|-----------------------------------------------------------|
- *  | 1     | circle        | [exposure, diameter, center-x, center-y]                  |
- *  | 2     | line          | [exposure, start-x, start-y, end-x, end-y, width]         |
- *  | 4     | outline       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation] |
- *  | 5     | polygon       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation] |
- *  | 20    | rectangle     | [exposure, x-size, y-size, center-x, center-y, rotation]  |
- *  | 21    | obround       | [exposure, x-size, y-size, center-x, center-y, rotation]  |
- *  -------------------------------------------------------------------------------------
+ *  ___________________________________________________________________________________________________
+ *  | Code  | Name          | Modifiers                                                               |
+ *  |-------|---------------|-------------------------------------------------------------------------|
+ *  | 1     | circle        | [exposure, diameter, center-x, center-y]                                |
+ *  | 2     | line          | [exposure, start-x, start-y, end-x, end-y, width]                       |
+ *  | 4     | outline       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation]               |
+ *  | 5     | polygon       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation]               |
+ *  | 20    | rectangle     | [exposure, x-size, y-size, center-x, center-y, rotation]                |
+ *  | 21    | obround       | [exposure, x-size, y-size, center-x, center-y, rotation]                |
+ *  ---------------------------------------------------------------------------------------------------
  */
 
 const svgNS = "http://www.w3.org/2000/svg";
@@ -28,12 +27,17 @@ export function renderLayer(layerData) {
     const toolDefinitions = layerData.toolDefinitions;
     const toolMacros = layerData.toolMacros;
     const commands = layerData.commands;
-    // Variable variables  (¯\_(ツ)_/¯) for drawing shapes.
+    const name = `${layerData.fileFunction.layer} ${layerData.fileFunction.side}`;
+    // Variable variables for drawing shapes.
     let currentToolCode = null;
     let lastX = null;
     let lastY = null;
     // Layer html object.
     const layer = document.createElementNS(svgNS, 'g');
+    layer.setAttribute('class', 'layer');
+    layer.setAttribute('fill', 'black');
+    layer.setAttribute('stroke', 'black');
+    layer.setAttribute('id', name);
 
     for (const command of commands) {
         // Handles tool change.
@@ -63,6 +67,7 @@ export function renderLayer(layerData) {
             }
         }
     }
+    // Return layer object.
     return layer;
 }
 
@@ -78,22 +83,21 @@ function drawShape(tool, x, y, macro = null) {
             if (macro)
                 return drawMacro(x, y, macro);
             else {
-                console.error('No macro given');
-                return null;
+                throw new Error('No macro given');
             }
         default:
-            console.warn(`This shape with code ${tool.code} and name ${tool.type} isn't known:\n ${tool}`);
-            return null;
+            throw new Error(`This shape with code ${tool.code} and name ${tool.type} isn't implemented:\n ${tool}`);
     }
 }
 
 function drawMacro(x, y, macro) {
     const macroShape = document.createElementNS(svgNS, 'g');
+    macroShape.setAttribute('data-gv-name', macro.macroName);
     if (macro) {
         for (const primitive of macro.primitives) {
             const shape = drawPrimitive(primitive, x, y);
             if (shape) {
-                shape.setAttribute('data-name', primitive.name);
+                shape.setAttribute('data-gv-name', primitive.name);
                 macroShape.appendChild(shape);
             }
         }
@@ -110,76 +114,64 @@ function drawPrimitive(primitive, x, y) {
         case 'line':
             const [, startX, startY, endX, endY, width] = primitive.modifiers;
             return drawLine(x + startX, y + startY, x + endX, y + endY, width);
-        case 'outline':
-            const outlineVertices = primitive.modifiers.slice(2, primitive.modifiers.length - 1);
-            return drawOutline(x, y, outlineVertices);
         case 'polygon':
             const polygonVertices = primitive.modifiers.slice(2, primitive.modifiers.length - 1);
             return drawPolygon(x, y, polygonVertices);
         case 'rectangle':
-            const [exposure, xSize, ySize, rectCenterX, rectCenterY, rotation] = primitive.modifiers;
-            return drawRect(x + rectCenterX, y + rectCenterY, xSize, ySize, rotation);           
+            if (primitive.modifiers.length == 7) {
+                const [, strokeWidth, startX, startY, endX, endY] = primitive.modifiers;
+                return drawLine(x + startX, y + startY, x + endX, y + endY, strokeWidth);
+            } else {
+                throw new Error('Other definition for the primitive rectangle not implemented.');
+            }
         case 'obround':
             const [, obroundXSize, obroundYSize, obroundCenterX, obroundCenterY, obroundRotation] = primitive.modifiers;
             return drawObround(x + obroundCenterX, y + obroundCenterY, obroundXSize, obroundYSize, obroundRotation);
         default:
-            console.warn(`This primitive with code ${primitive.code} and name ${primitive.name} isn't known:\n`, primitive);
-            break;
+            throw new Error(`This primitive with code ${primitive.code} and name ${primitive.name} isn't known:\n ${primitive}`);
     }
 }
 
-function drawCircle(x, y, diameter, fill = 'black') {
+function drawCircle(x, y, diameter) {
     const circle = document.createElementNS(svgNS, 'circle');
 
     circle.setAttribute('cx', x);
     circle.setAttribute('cy', y);
     circle.setAttribute('r', diameter / 2);
-    circle.setAttribute('fill', fill);
+    circle.setAttribute('fill', 'inherit');
     circle.setAttribute('stroke', 'none');
 
     return circle;
 }
 
-function drawLine(startX, startY, endX, endY, width, fill = 'black') {
+function drawLine(startX, startY, endX, endY, width) {
     const line = document.createElementNS(svgNS, 'line');
 
     line.setAttribute('x1', startX);
     line.setAttribute('y1', startY);
     line.setAttribute('x2', endX);
     line.setAttribute('y2', endY);
-    line.setAttribute('stroke', fill);
+    line.setAttribute('fill', 'inherit');
+    line.setAttribute('stroke', 'inherit');
     line.setAttribute('stroke-width', width);
 
     return line;
 }
 
-function drawOutline(x, y, vertices, fill = 'black') {
-    const polyline = document.createElementNS(svgNS, 'polyline');
-
-    // Addiing global x and y offsets to verticies.
-    const points = vertices.map((val, i) => (i % 2 === 0 ? x + val : y + val)).join(' ');
-    
-    polyline.setAttribute('points', points);
-    polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', fill);
-
-    return polyline;
-}
-
-function drawPolygon(x, y, vertices, fill = 'black') {
+function drawPolygon(x, y, vertices) {
     const polygon = document.createElementNS(svgNS, 'polygon');
     
-    // Addiing global x and y offsets to verticies.
+    // Addiing local x and y offsets to verticies.
     const points = vertices.map((val, i) => i % 2 === 0 ? x + val : y + val).join(' ');
     
     polygon.setAttribute('points', points);
-    polygon.setAttribute('fill', fill);
+    polygon.setAttribute('fill', 'inherit');
     polygon.setAttribute('stroke', 'none');
 
     return polygon;
 }
 
-function drawRect(centerX, centerY, width, height, rotation, fill = 'black') {
+function drawRect(centerX, centerY, width, height, rotation) {
     const rect = document.createElementNS(svgNS, 'rect');
 
     rect.setAttribute('x', centerX - width / 2);
@@ -187,13 +179,13 @@ function drawRect(centerX, centerY, width, height, rotation, fill = 'black') {
     rect.setAttribute('width', Math.abs(width));
     rect.setAttribute('height', Math.abs(height));
     rect.setAttribute('transform', `rotate(${rotation}, ${centerX}, ${centerY})`);
-    rect.setAttribute('fill', fill);
+    rect.setAttribute('fill', 'inherit');
     rect.setAttribute('stroke', 'none');
 
     return rect;
 }
 
-function drawObround(centerX, centerY, width, height, rotation, fill = 'black') {
+function drawObround(centerX, centerY, width, height, rotation) {
     const obroundPath = document.createElementNS(svgNS, 'path');
 
     const halfWidth = width / 2;
@@ -214,8 +206,8 @@ function drawObround(centerX, centerY, width, height, rotation, fill = 'black') 
     `;
 
     obroundPath.setAttribute('d', pathData);
-    obroundPath.setAttribute('fill', fill);
-    obroundPath.setAttribute('stroke', 'black');
+    obroundPath.setAttribute('fill', 'inherit');
+    obroundPath.setAttribute('stroke', 'none');
     obroundPath.setAttribute('transform', `rotate(${rotation}, ${centerX}, ${centerY})`);
 
     return obroundPath;

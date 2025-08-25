@@ -32,9 +32,11 @@ function extractFileFunction(commentString) {
     // Return an object with function/layer, side and additional attributes.
     // For TF.FileFunction,Copper,L1,Top It should return {function: "Copper", side: "Top", attributes: ["L1"]}.
     if (commentString.startsWith('#@! TF.FileFunction,')) {
-        const functionArray = commentString.substring('#@! TF.FileFunction,'.length).split(',');
+        const fileFunctionString = commentString.substring('#@! TF.FileFunction,'.length);
+        const functionArray = fileFunctionString.split(',');
         const functionObj = {
-            function: functionArray[0],
+            string: fileFunctionString,
+            layer: functionArray[0],
             side: functionArray.at(-1),
             attributes: functionArray.slice(1, functionArray.length - 1)
         }
@@ -64,12 +66,12 @@ export function getLayers(commandsArray, fileNames) {
                     macroName: command.name,
                     primitives: macroPrimitives
                 };
-            } else if (command.type === 'comment') {
+            } else if (command.type === 'comment' && !fileFunction) {
                 const functionObj = extractFileFunction(command.comment);
                 if (functionObj) {
                     fileFunction = functionObj;
                 }
-            } else if (command.type === 'coordinateFormat') {
+            } else if (command.type === 'coordinateFormat' && !precision) {
                 precision = command.format[1];
             }
         }

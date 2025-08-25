@@ -4,8 +4,8 @@ function primitiveName(code) {
     const primitiveMap = {
         '1': 'circle',
         '2': 'line',
-        '4': 'outline',
-        '5': 'polygon',
+        // '4': 'outline',
+        '4': 'polygon',
         '20': 'rectangle',
         '21': 'obround',
         '22': 'polygon'
