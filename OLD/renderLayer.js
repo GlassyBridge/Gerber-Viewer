@@ -1,22 +1,22 @@
-// #region RenderLayer
 /*
  * ███╗░░░███╗░█████╗░░█████╗░██████╗░░█████╗░██████╗░██████╗░██╗███╗░░░███╗██╗████████╗██╗██╗░░░██╗███████╗░██████╗
  * ████╗░████║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║████╗░████║██║╚══██╔══╝██║██║░░░██║██╔════╝██╔════╝
  * ██╔████╔██║███████║██║░░╚═╝██████╔╝██║░░██║██████╔╝██████╔╝██║██╔████╔██║██║░░░██║░░░██║╚██╗░██╔╝█████╗░░╚█████╗░
  * ██║╚██╔╝██║██╔══██║██║░░██╗██╔══██╗██║░░██║██╔═══╝░██╔══██╗██║██║╚██╔╝██║██║░░░██║░░░██║░╚████╔╝░██╔══╝░░░╚═══██╗
  * ██║░╚═╝░██║██║░░██║╚█████╔╝██║░░██║╚█████╔╝██║░░░░░██║░░██║██║██║░╚═╝░██║██║░░░██║░░░██║░░╚██╔╝░░███████╗██████╔╝
- * ╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░╚═╝░░╚═╝╚═╝╚═╝░░░░░╚═╝╚═╝░░░╚═╝░░░╚═╝░░░╚═╝░░░╚══════╝╚═════╝░ and their modifiers.
+ * ╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░╚═╝░░╚═╝╚═╝╚═╝░░░░░╚═╝╚═╝░░░╚═╝░░░╚═╝░░░╚═╝░░░╚══════╝╚═════╝░
  *  ___________________________________________________________________________________________________
  *  | Code  | Name          | Modifiers                                                               |
  *  |-------|---------------|-------------------------------------------------------------------------|
  *  | 1     | circle        | [exposure, diameter, center-x, center-y]                                |
  *  | 2     | line          | [exposure, start-x, start-y, end-x, end-y, width]                       |
  *  | 4     | polygon       | [exposure, num-vertices, vert-x1, vert-y1, ..., rotation]               |
- *  | 20    | rectangle     | [exposure, x-size, y-size, center-x, center-y, rotation]                |
+ *  | 20    | rectangle     | [exposure, stroke-width, start-x, start-y, end-x, end-y, rotation]      |
  *  | 21    | obround       | [exposure, x-size, y-size, center-x, center-y, rotation]                |
  *  ---------------------------------------------------------------------------------------------------
  */
 
+// Constant for SVG link.
 const svgNS = "http://www.w3.org/2000/svg";
 
 // A function that handles the rendering of a single layer.
@@ -118,8 +118,8 @@ function drawPrimitive(primitive, x, y) {
             return drawPolygon(x, y, polygonVertices);
         case 'rectangle':
             if (primitive.modifiers.length == 7) {
-                const [, strokeWidth, startX, startY, endX, endY] = primitive.modifiers;
-                return drawLine(x + startX, y + startY, x + endX, y + endY, strokeWidth);
+                const [, strokeWidth, startX, startY, endX, endY, rotation] = primitive.modifiers;
+                return drawLine(x + startX, y + startY, x + endX, y + endY, strokeWidth, rotation);
             } else {
                 throw new Error('Other definition for the primitive rectangle not implemented.');
             }
@@ -143,7 +143,7 @@ function drawCircle(x, y, diameter) {
     return circle;
 }
 
-function drawLine(startX, startY, endX, endY, width) {
+function drawLine(startX, startY, endX, endY, width, rot = null) { // rotation is not needed but may be needed for the rectangle macroPrimitive.
     const line = document.createElementNS(svgNS, 'line');
 
     line.setAttribute('x1', startX);
@@ -153,6 +153,14 @@ function drawLine(startX, startY, endX, endY, width) {
     line.setAttribute('fill', 'inherit');
     line.setAttribute('stroke', 'inherit');
     line.setAttribute('stroke-width', width);
+
+    // Maynot be necessary but just to be safe.
+    if(rot && rot != 0) {
+        const centerX = (startX + endX) / 2;
+        const centerY = (startY + endY) / 2;
+
+        line.setAttribute('transform', `rotate(${rot}, ${centerX}, ${centerY})`);
+    }
 
     return line;
 }

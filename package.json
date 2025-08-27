@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/GlassyBridge/Gerber-Viewer#readme",
   "devDependencies": {
+    "memfs": "^4.38.2",
     "vite": "^7.1.1"
   },
   "dependencies": {
@@ -26,6 +27,8 @@
     "@tracespace/parser": "^5.0.0-next.0",
     "@tracespace/plotter": "^5.0.0-alpha.0",
     "@tracespace/renderer": "^5.0.0-alpha.0",
-    "svg-pan-zoom": "^3.6.2"
+    "buffer": "^6.0.3",
+    "svg-pan-zoom": "^3.6.2",
+    "vite-plugin-node-polyfills": "^0.24.0"
   }
 }
