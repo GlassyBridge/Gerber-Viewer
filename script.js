@@ -94,9 +94,8 @@ gerberInput.addEventListener('change', async e => {
 
         topLayer.innerHTML = renderSvg(renderBoardResult.top);
         bottomLayer.innerHTML = renderSvg(renderBoardResult.bottom);
-        for (const layerName in layers) {
-            console.log(layerName);
-            const layerData = layers[layerName];
+        for (const layerID in layers) {
+            const layerData = layers[layerID];
             const layer = renderLayer(layerData);
             allLayers.appendChild(layer);
         }
