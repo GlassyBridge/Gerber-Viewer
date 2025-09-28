@@ -110,6 +110,8 @@ export function getLayers(layerData) {
             color: `hsla(${Math.random() * 360}, 100%, 50%, 0.95)`,
             filename: layerDatum.fileData.filename,
             id: layerID,
+            side: layerDatum.fileData.side,
+            type: layerDatum.fileData.type,
             commands: commands,
             toolDefinitions: toolDefinitions,
             toolMacros: toolMacros

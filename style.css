@@ -1,11 +1,127 @@
 body {
-  font-family: "Segoe UI", sans-serif;
+    font-family: "Segoe UI", sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
 
-g.hidden {
-    display: none;
+h3 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
 }
 
 p {
+    position: absolute;
+    margin: 0;
+    bottom: 0;
+    left: 10px;
     font-size: 10pt;
+    z-index: 2;
+    background-color: rgba(47, 0, 255, 0.138);
+}
+
+#choose-view {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    background-color: rgba(255, 0, 0, 0.138);
+}
+
+
+#controls {
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 2;
+    background-color: rgba(0, 255, 0, 0.138);
+}
+
+#reset {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#scene-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(244, 247, 249);
+    z-index: 1;
+}
+
+#svg {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(197, 232, 255, 0.2);
+}
+
+.hidden {
+    display: none;
+}
+
+#gerber-input {
+    position: absolute;
+    bottom: 20px;
+    left: 10px;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.138);
+}
+
+#layers-panel {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: fit-content;
+    background-color: rgba(166, 0, 255, 0.138);
+    overflow: hidden;
+    z-index: 2;
+}
+
+#layers-list {
+    pointer-events: auto;
+    width: 200px;
+    height: 300px;
+    background-color: rgba(0, 64, 255, 0.138);
+    overflow: scroll;
+}
+
+.layer-control {
+    background-color: rgba(0, 255, 0, 0.138);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.layer-control input[type="color"] {
+    width: 30px;
+    height: 30px;
+    border: none;
+    flex-shrink: 0;
+}
+
+.layer-control input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.layer-control span {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

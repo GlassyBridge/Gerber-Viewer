@@ -7,15 +7,29 @@
     <title>Gerber Viewer</title>
 </head>
 <body>
-    <button id="bt3">Layers</button>
-    <button id="bt1">Top</button>
-    <button id="bt2">Bottom</button>
+    <div id="choose-view">
+        <button id="bt3">Layers</button>
+        <button id="bt1">Top</button>
+        <button id="bt2">Bottom</button>
+    </div>
     <div id="scene-container">
-        <svg id="svg" width="500" height="500" viewBox="20 -120 100 100"></svg>
+        <svg id="svg" viewBox="-10 -10 10 10"></svg>
     </div>
     <input type="file" name="gerber" id="gerber-input" accept=".gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts,
                                                                 .gtp, .gto, .gbr, .drl" multiple>
     <p>Supported file types: .gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl</p>
+    <div id="controls">
+        <button id="zoom-out">Zoom out</button>
+        <input id="zoom-slider" type="range">
+        <button id="zoom-in">Zoom in</button>
+        <button id="reset">Reset</button>
+    </div>
+    <div id="layers-panel">
+        <h3>Layers</h3>
+        <div id="layers-list">
+            <!-- many elements with the class layer control where the controls should be justified by shape between -->
+        </div>
+    </div>
     <script type="module" src="script.js" defer></script>
 </body>
 </html>
