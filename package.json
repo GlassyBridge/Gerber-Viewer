@@ -1,34 +1,28 @@
 {
   "name": "gerber-viewer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GlassyBridge/Gerber-Viewer.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "GB114",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/GlassyBridge/Gerber-Viewer/issues"
   },
   "homepage": "https://github.com/GlassyBridge/Gerber-Viewer#readme",
-  "devDependencies": {
-    "memfs": "^4.38.2",
-    "vite": "^7.1.1"
-  },
   "dependencies": {
     "@tracespace/core": "^5.0.0-alpha.0",
-    "@tracespace/parser": "^5.0.0-next.0",
-    "@tracespace/plotter": "^5.0.0-alpha.0",
-    "@tracespace/renderer": "^5.0.0-alpha.0",
-    "buffer": "^6.0.3",
-    "svg-pan-zoom": "^3.6.2",
-    "vite-plugin-node-polyfills": "^0.24.0"
+    "svg-pan-zoom": "^3.6.2"
   }
 }

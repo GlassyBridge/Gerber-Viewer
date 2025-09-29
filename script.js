@@ -12,6 +12,9 @@ const viewSettings = svgPanZoom('#svg', {
     preventMouseEventsDefault: false,
     minZoom: 0.1,
     maxZoom: 100,
+    onZoom: function(newZoomLevel) {
+        zoomSlider.value = (Math.log(newZoomLevel) - minLog) / scale * 100;
+    },
     beforePan: function (oldPan, newPan){
                     const stopHorizontal = false
                     , stopVertical = false
@@ -40,6 +43,22 @@ window.addEventListener('resize', () => {
 const viewPort = document.querySelector('.svg-pan-zoom_viewport');
 const layersPanel = document.getElementById('layers-panel');
 const layersList = document.getElementById('layers-list');
+const infoPanel = document.getElementById('info-panel');
+const infoBtn = document.getElementById('info');
+infoBtn.addEventListener('click', () => {
+    if (infoPanel.classList.contains('hidden')) {
+        infoPanel.classList.remove('hidden');
+        infoBtn.classList.add('active');
+    } else {
+        infoPanel.classList.add('hidden');
+        infoBtn.classList.remove('active');
+    }
+});
+const closeInfoBtn = document.getElementById('close-info');
+closeInfoBtn.addEventListener('click', () => {
+    infoPanel.classList.add('hidden');
+    infoBtn.classList.remove('active');
+});
 
 let renderMethod = 'top';
 let renderBoardResult;

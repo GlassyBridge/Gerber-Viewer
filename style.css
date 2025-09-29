@@ -13,6 +13,51 @@ body {
     display: none;
 }
 
+#info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 40px;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+#info-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40vw;
+    height: 80vh;
+    transform: translateX(-50%) translateY(-50%);
+    overflow: scroll;
+    background-color: white;
+    border-radius: 8px;
+    padding: 0px 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 3;
+}
+
+#close-cont {
+    position: sticky;
+    top: 0;
+    right: 0;
+    padding: 10px 0;
+    background: white;
+}
+
+#close-info {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
 .tooltip {
     z-index: 3;
 }
@@ -41,6 +86,8 @@ body {
     bottom: auto;
 }
 
+
+
 .tooltip[data-gv-tooltip]:hover::after {
     opacity: 1;
     visibility: visible;
@@ -60,7 +107,8 @@ h3 {
 }
 
 #gerber-input {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.447);
+    color: white;
     border: #000000 1px solid;
     padding: 10px;
     border-radius: 8px;
@@ -101,7 +149,7 @@ h3 {
     right: 50%;
     transform: translateX(50%);
     width: fit-content;
-    background-color: #fff;
+    background-color: #ffffff58;
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -144,6 +192,8 @@ button.control:hover {
     bottom: 0;
     left: 0;
     right: 0;
+    width: 100vw;
+    height: 100vh;
     background-color: #f0f2f5;
     z-index: 1;
 }
