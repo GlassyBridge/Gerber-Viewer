@@ -10,7 +10,7 @@ const svg = document.getElementById('svg');
 const viewSettings = svgPanZoom('#svg', {
     zoomScaleSensitivity: 0.3,
     preventMouseEventsDefault: false,
-    minZoom: 0.75,
+    minZoom: 0.1,
     maxZoom: 100,
     beforePan: function (oldPan, newPan){
                     const stopHorizontal = false
@@ -34,10 +34,11 @@ window.addEventListener('resize', () => {
     if (svg.clientWidth > 0 && svg.clientHeight > 0) {
         viewSettings.resize();
         viewSettings.center();
-        viewSettings.fit();
+        // viewSettings.fit();
     } 
 });
 const viewPort = document.querySelector('.svg-pan-zoom_viewport');
+const layersPanel = document.getElementById('layers-panel');
 const layersList = document.getElementById('layers-list');
 
 let renderMethod = 'top';
@@ -45,16 +46,21 @@ let renderBoardResult;
 let layers;
 const layerObjs = {};
 
+// SVG layers
 let topLayer = document.createElementNS("http://www.w3.org/2000/svg", 'g');
 topLayer.id = 'topLayer';
+topLayer.classList.add('hidden');
 viewPort.appendChild(topLayer);
 let bottomLayer = document.createElementNS("http://www.w3.org/2000/svg", 'g');
 bottomLayer.id = 'bottomLayer';
+bottomLayer.classList.add('hidden');
 viewPort.appendChild(bottomLayer);
 let allLayers = document.createElementNS("http://www.w3.org/2000/svg", 'g');
 allLayers.id = 'allLayers';
+allLayers.classList.add('hidden');
 viewPort.appendChild(allLayers);
 
+// View buttons
 const bt1 = document.getElementById('bt1');
 bt1.addEventListener('click', () => {
     renderMethod = 'top';
@@ -62,6 +68,7 @@ bt1.addEventListener('click', () => {
     topLayer.classList.remove('hidden');
     bottomLayer.classList.add('hidden');
     allLayers.classList.add('hidden');
+    layersPanel.classList.add('hidden');
 
     viewSettings.updateBBox();
     // viewSettings.fit();
@@ -74,6 +81,7 @@ bt2.addEventListener('click', () => {
     topLayer.classList.add('hidden');
     bottomLayer.classList.remove('hidden');
     allLayers.classList.add('hidden');
+    layersPanel.classList.add('hidden');
 
     viewSettings.updateBBox();
     // viewSettings.fit();
@@ -86,11 +94,43 @@ bt3.addEventListener('click', () => {
     topLayer.classList.add('hidden');
     bottomLayer.classList.add('hidden');
     allLayers.classList.remove('hidden');
+    layersPanel.classList.remove('hidden');
 
     viewSettings.updateBBox();
     // viewSettings.fit();
     // viewSettings.center();
 });
+
+// Controls
+const resetBtn = document.getElementById('reset');
+resetBtn.addEventListener('click', () => {
+    viewSettings.reset();
+});
+const zoomInBtn = document.getElementById('zoom-in');
+zoomInBtn.addEventListener('click', () => {
+    console.log('zooming in');
+    viewSettings.zoomIn();
+})
+const zoomOutBtn = document.getElementById('zoom-out');
+zoomOutBtn.addEventListener('click', () => {
+    viewSettings.zoomOut();
+})
+const zoomSlider = document.getElementById('zoom-slider');
+zoomSlider.min = 0;
+zoomSlider.max = 100;
+zoomSlider.step = 0.01;
+
+const minLog = Math.log(0.1);
+const maxLog = Math.log(100);
+const scale = maxLog - minLog;
+
+zoomSlider.value = (Math.log(viewSettings.getZoom()) - minLog) / scale * 100;
+zoomSlider.addEventListener('input', () => {
+    const sliderValue = parseFloat(zoomSlider.value);
+    const zoomValue = Math.exp(minLog + scale * sliderValue / 100);
+    viewSettings.zoom(zoomValue);
+});
+
 
 gerberInput.addEventListener('change', async e => {
     const files = Array.from(e.target.files);
@@ -172,6 +212,8 @@ function createLayerControl(layerObj) {
     const name = document.createElement('span');
     name.textContent = layerObj.type + ' - ' + layerObj.side;
 
+    layerControl.classList.add('tooltip');
+    layerControl.setAttribute('data-gv-tooltip', layerObj.type + ' - ' + layerObj.side);
     layerControl.appendChild(colorInput);
     layerControl.appendChild(name);
     layerControl.appendChild(visibilityCheckbox);
