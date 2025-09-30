@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/GlassyBridge/Gerber-Viewer/issues"
   },
-  "homepage": "https://github.com/GlassyBridge/Gerber-Viewer#readme",
+  "homepage": "https://github.com/GlassyBridge/Gerber-Viewer",
   "dependencies": {
     "@tracespace/core": "^5.0.0-alpha.0",
     "svg-pan-zoom": "^3.6.2"
