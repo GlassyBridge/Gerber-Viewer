@@ -1,4 +1,4 @@
-# Gerber Viewer
+# Gerber Viewer (WIP)
 A simple web app to view your gerbers. (Part one of my big project)
 ## How to use
 - Load Gerber files using the file input at the bottom left corner. (.gbrjob files aren't supported so dont upload them.)
