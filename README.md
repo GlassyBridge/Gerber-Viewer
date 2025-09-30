@@ -11,7 +11,9 @@ A simple web app to view your gerbers. (Part one of my big project)
   - Ability to add 3d models for components.
   - Permanent shareable links.
   - Possibly a redisign of the website.
+
 ### License
   - MIT
+
 ## Remarks
   - Please vote for this project in SoM as a gesture of support.
