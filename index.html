@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerber Viewer</title>
+  <script type="module" crossorigin src="/assets/main-CXRqtuzk.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-r-twy73C.css">
+</head>
+<body>
+    <div id="choose-view">
+        <button id="bt3">Layers</button>
+        <button id="bt1">Top</button>
+        <button id="bt2">Bottom</button>
+    </div>
+    <div id="info" class="tooltip bottom" data-gv-tooltip="Info">
+        !
+    </div>
+    <div id="info-panel">
+        <div id="close-cont">
+            <button id="close-info">X</button>
+        </div>
+        <h2>Gerber Viewer</h2>
+        <p><i>Better that you use PC for this demo</i></p>
+        <h3>How to use?</h3>
+        <ul>
+            <li>Load Gerber files using the file input at the bottom left corner.</li>
+            <li>Use mouse wheel to zoom in and out, click and drag to pan the view. (I think touch is supported too)</li>
+            <li>Use the buttons at the top center to switch between top, bottom and layers view.</li>
+            <li>Use the controls at the bottom center to zoom in, zoom out and reset the view.</li>
+            <li><i>In layers view only: </i>Use the layers panel at the right side to toggle visibility of individual layers.</li>
+        </ul>
+        <h3>What did I make this project?</h3>
+        <p>I made this project to serve as a simple tool for viewing Gerber files just like <a href="https://tracespace.io" target="_blank">tracespace.io</a> does.
+        I wanted to make it unique by giving the user an option to generate permanent links to use for demo purposes for hardware projects on platforms like in SoM.
+        I also wanted to add a 3d version which enables the user to place components on it that could also be shared with a permanent link.</p>
+        <p>Unfortunately, due to time constraints and my lack of skills in these kinds of developments, I decided to make a testable demo, with basic features, just before the end of SoM. 
+            So this project doesn't have those promised features but I plan to get to them even well after Summer of making ends.</p>
+        <p>For now, I hope you find this project useful and fun to use. P.S my gerber drawing function is not great so don't bully me on that (^-^)</p>
+        <p>You could support me to continue working on this project by voting for it on SoM :) Thanks in advance.</p>
+        <h3>If you don't have Gerber files to test with</h3>
+        <p>You could download some example Gerber files from here: <span style="font-size: 0.6em;">(sorry for not implementing zip extraction in my gerber viewer, you would have to extract it yourself)</span></p>
+        <ul>
+            <li><a href="Gerber/3LayerGerber.zip">Gerber with only 3 layers (Cu_top, edge-cut, Cu_bottom)</a> (zip file)</li>
+            <li><a href="Gerber/OldFormatGerber.zip">Gerber with the old format</a> (zip file)</li>
+            <li><a href="Gerber/NewFormatGerber.zip">Gerber with the new format</a> (zip file)</li>
+        </ul>
+    </div>
+    <div id="scene-container">
+        <svg id="svg" viewBox="-10 -10 10 10"></svg>
+    </div>
+    <div class="tooltip hm" data-gv-tooltip="Supported file types: .gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl">
+        <input type="file" id="gerber-input" accept=".gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl" multiple>
+    </div>
+    <div id="controls">
+        <button class="control tooltip" data-gv-tooltip="Zoom out" id="zoom-out">
+            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path d="M19.9604 11.4802C19.9604 13.8094 19.0227 15.9176 17.5019 17.4512C16.9332 18.0247 16.2834 18.5173 15.5716 18.9102C14.3594 19.5793 12.9658 19.9604 11.4802 19.9604C6.79672 19.9604 3 16.1637 3 11.4802C3 6.79672 6.79672 3 11.4802 3C16.1637 3 19.9604 6.79672 19.9604 11.4802Z" stroke="#fff" stroke-width="2.4"></path>
+                    <path d="M18.1553 18.1553L21.8871 21.8871" stroke="#fff" stroke-width="2.4" stroke-linecap="round"></path>
+                    <path d="M8 11.5492H15.0983" stroke="#fff" stroke-width="2.4" stroke-linecap="round"></path>
+                </g>
+            </svg>
+        </button>
+        <input id="zoom-slider" type="range">
+        <button class="control tooltip" data-gv-tooltip="Zoom in" id="zoom-in">
+            <svg width="16px" height="16px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"> <path d="M19.9604 11.4802C19.9604 13.8094 19.0227 15.9176 17.5019 17.4512C16.9332 18.0247 16.2834 18.5173 15.5716 18.9102C14.3594 19.5793 12.9658 19.9604 11.4802 19.9604C6.79672 19.9604 3 16.1637 3 11.4802C3 6.79672 6.79672 3 11.4802 3C16.1637 3 19.9604 6.79672 19.9604 11.4802Z" stroke="#ffffff" stroke-width="2.4"></path>
+                    <path d="M18.1553 18.1553L21.8871 21.8871" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"></path>
+                    <path d="M8 11.5492H15.0983" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"></path>
+                    <path d="M8 11.5492H15.0983" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"></path>
+                    <path d="M11.5492 15.0984L11.5492 8.00006" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"></path>
+                </g>
+            </svg>
+        </button>
+        <button class="control tooltip" data-gv-tooltip="Reset" id="reset">
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="bi bi-fullscreen">
+                <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
+            </svg>
+        </button>
+    </div>
+    <div id="layers-panel" class="hidden">
+        <h3>Layers</h3>
+        <div id="layers-list">
+            <!-- many elements with the class layer control -->
+        </div>
+    </div>
+</body>
+</html>
