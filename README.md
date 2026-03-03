@@ -14,6 +14,3 @@ A simple web app to view your gerbers. (Part one of my big project)
 
 ### License
   - MIT
-
-## Remarks
-  - Please vote for this project in SoM as a gesture of support.
