@@ -87,24 +87,25 @@ export function getLayers(layerData) {
                             return resolveModifier(modifier, toolParams);
                         });
                     } catch(e) {
-                        console.warn('can\'t do parameters bc', e);
+                        console.warn('Can\'t do parameters bc', e);
                         resolvedModifiers = macroPrimitive.modifiers.map(modifier => {
                             return resolveModifier(modifier, toolParams);
                         });
                     }
 
-                    // Return object containing the code and resolved modifiers.
+                    // Return object containing the code and resolved modifiers
                     return {
                         name: macroPrimitive.name,
                         code: macroPrimitive.code,
                         modifiers: resolvedModifiers
                     };
                 });
-                // Replacing the primitives with the resolved ones.
+                // Replacing the primitives with the resolved ones
                 macro.primitives = resolvedPrimitives;
             }
         }
-        // Layer.
+
+        // Assign layer data to layers object
         layers[layerID] = {
             precision: precision,
             color: `hsla(${Math.random() * 360}, 100%, 50%, 0.95)`,
@@ -117,7 +118,7 @@ export function getLayers(layerData) {
             toolMacros: toolMacros
         };
     }
-    // Return layers object.
+    // Return layers object
     return layers;
 }
 // #endregion

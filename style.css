@@ -58,41 +58,6 @@ body {
     cursor: pointer;
 }
 
-.tooltip {
-    z-index: 3;
-}
-
-.tooltip[data-gv-tooltip]::after {
-    content: attr(data-gv-tooltip);
-    position: absolute;
-    left: 0;
-    background-color: #232323;
-    color: #fff;
-    font-size: 0.75rem;
-    padding: 8px 12px;
-    border-radius: 4px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 4;
-}
-
-.tooltip[data-gv-tooltip]::after {
-    bottom: 101%;
-}
-
-.tooltip.bottom[data-gv-tooltip]::after {
-    top: 125%;
-    bottom: auto;
-}
-
-
-
-.tooltip[data-gv-tooltip]:hover::after {
-    opacity: 1;
-    visibility: visible;
-}
-
 h3 {
     margin: 10px;
     padding: 0;
@@ -100,19 +65,23 @@ h3 {
     color: #000000;
 }
 
-.hm {
+.file-input {
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    left: 0;
+    bottom: 0;
+    padding: 10px;
+    margin: 10px;
+    border: #000000 1px solid;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.447);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+    z-index: 3;
 }
 
 #gerber-input {
-    background-color: rgba(0, 0, 0, 0.447);
     color: white;
-    border: #000000 1px solid;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
 }
 
 #choose-view button {
@@ -187,6 +156,7 @@ button.control:hover {
 }
 
 #scene-container {
+    touch-action: pan-y pan-x;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -205,8 +175,8 @@ button.control:hover {
     background: radial-gradient(
         circle at center,
         #ffffff 0%,
-        #b4b4b4 75%,
-        #8f8f8f 100%
+        #b4b4b4 65%,
+        #6e6e6e 100%
     );
 }
 
@@ -223,7 +193,8 @@ button.control:hover {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    /* padding: 15px; */
+    padding: 0;
+    padding-top: 13px;
     /* overflow: hidden; */
     z-index: 2;
 }

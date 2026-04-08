@@ -231,8 +231,8 @@ function createLayerControl(layerObj) {
     const name = document.createElement('span');
     name.textContent = layerObj.type + ' - ' + layerObj.side;
 
-    layerControl.classList.add('tooltip');
-    layerControl.setAttribute('data-gv-tooltip', layerObj.type + ' - ' + layerObj.side);
+    // layerControl.classList.add('tooltip');
+    layerControl.setAttribute('title', layerObj.type + ' - ' + layerObj.side);
     layerControl.appendChild(colorInput);
     layerControl.appendChild(name);
     layerControl.appendChild(visibilityCheckbox);

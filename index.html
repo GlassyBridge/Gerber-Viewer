@@ -2,17 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <title>Gerber Viewer</title>
 </head>
 <body>
+    <!-- Main scene -->
+    <div id="scene-container">
+        <svg id="svg" viewBox="-10 -10 10 10"></svg>
+    </div>
+
     <div id="choose-view">
         <button id="bt3">Layers</button>
         <button id="bt1">Top</button>
         <button id="bt2">Bottom</button>
     </div>
-    <div id="info" class="tooltip bottom" data-gv-tooltip="Info">
+
+    <div id="info" class=" bottom" title="Info">
         !
     </div>
     <div id="info-panel">
@@ -20,7 +26,7 @@
             <button id="close-info">X</button>
         </div>
         <h2>Gerber Viewer</h2>
-        <p><i>Better that you use PC for this demo</i></p>
+        <p><i>It is better if you use a PC for this demo</i></p>
         <h3>How to use?</h3>
         <ul>
             <li>Load Gerber files using the file input at the bottom left corner.</li>
@@ -29,7 +35,7 @@
             <li>Use the controls at the bottom center to zoom in, zoom out and reset the view.</li>
             <li><i>In layers view only: </i>Use the layers panel at the right side to toggle visibility of individual layers.</li>
         </ul>
-        <h3>What did I make this project?</h3>
+        <h3>Why did I make this project?</h3>
         <p>I made this project to serve as a simple tool for viewing Gerber files just like <a href="https://tracespace.io" target="_blank">tracespace.io</a> does.
         I wanted to make it unique by giving the user an option to generate permanent links to use for demo purposes for hardware projects on platforms like in SoM.
         I also wanted to add a 3d version which enables the user to place components on it that could also be shared with a permanent link.</p>
@@ -45,14 +51,18 @@
             <li><a href="/Gerber-Viewer/Gerber/NewFormatGerber.zip">Gerber with the new format</a> (zip file)</li>
         </ul>
     </div>
-    <div id="scene-container">
-        <svg id="svg" viewBox="-10 -10 10 10"></svg>
-    </div>
-    <div class="tooltip hm" data-gv-tooltip="Supported file types: .gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl">
-        <input type="file" id="gerber-input" accept=".gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl" multiple>
-    </div>
+
+    <!-- File input -->
+    <label for="gerber-input">
+        <div class="file-input" title="Supported file types: .gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl">
+            <input type="file" id="gerber-input" accept=".gbl, .gbs, .gbp, .gbo, .gm1, .gtl, .gts, .gtp, .gto, .gbr, .drl" multiple>
+        </div>
+    </label>
+
+    <!-- Controls -->
     <div id="controls">
-        <button class="control tooltip" data-gv-tooltip="Zoom out" id="zoom-out">
+        <!-- Zoom out Btn -->
+        <button class="control" title="Zoom out" id="zoom-out">
             <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -63,8 +73,12 @@
                 </g>
             </svg>
         </button>
+
+        <!-- Zoom Slider -->
         <input id="zoom-slider" type="range">
-        <button class="control tooltip" data-gv-tooltip="Zoom in" id="zoom-in">
+
+        <!-- Zoom in btn -->
+        <button class="control" title="Zoom in" id="zoom-in">
             <svg width="16px" height="16px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -76,16 +90,20 @@
                 </g>
             </svg>
         </button>
-        <button class="control tooltip" data-gv-tooltip="Reset" id="reset">
+
+        <!-- Reset btn -->
+        <button class="control" title="Reset" id="reset">
             <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="bi bi-fullscreen">
                 <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
             </svg>
         </button>
     </div>
+
+    <!-- Layers Panel -->
     <div id="layers-panel" class="hidden">
         <h3>Layers</h3>
         <div id="layers-list">
-            <!-- many elements with the class layer control -->
+            <!-- many elements with the class layer control-->
         </div>
     </div>
     <script type="module" src="script.js" defer></script>

@@ -1,4 +1,41 @@
+/**
+ * Simple parser function from @ tracespace/parser with added support for macroPrimitive names.
+ *
+ * @example
+ * ```ts
+ * import { parse } from 'parser.js';
+ *
+ * //Get the parsed file:
+ * parse('GO4 gerber file readResults');
+ * ```
+ *
+ * @category Parser
+ */
+export function parse(readResult) {
+    const parsedData = {};
+    for (const layer in readResult.layers) {
+        const layerObject = readResult.layers[layer];
+        const parsedObject = readResult.parseTreesById[layerObject.id];
+        parsedData[layerObject.id] = {
+            fileData: { id: layerObject.id,
+                        filename: layerObject.filename,
+                        type: layerObject.type,
+                        side: layerObject.side,
+                        filetype: parsedObject.filetype
+                    },
+            children: parsedObject.children
+        };
+    }
+    for (const layerID in parsedData) {
+        const layerChildrenData = parsedData[layerID].children;
+        parsedData[layerID].children = macroPrimitiveTypes(layerChildrenData);
+    }
+    return parsedData;
+}
+
+// Function to convert primitive codes to names
 function primitiveName(code) {
+    // Map of primitive codes to names
     const primitiveMap = {
         '1': 'circle',
         '2': 'line',
@@ -8,14 +45,20 @@ function primitiveName(code) {
         '22': 'polygon'
     };
 
-    return primitiveMap[code] || unsupported;
+    // Return the corresponding name or 'unsupported' if in the map
+    return primitiveMap[code] || 'unsupported';
 }
 
+// Function to assign names to macroPrimitives
 function macroPrimitiveTypes(children) {
+    // Iterating through each command in children
     children.forEach((command) => {
+
         if (command.type === 'toolMacro') {
+            // Iterating through each child of the command if it's a toolMacro
             command.children.forEach((child) => {
                 if (child.type === 'macroPrimitive') {
+                    // Assign the primitive name based on its code
                     child.name = primitiveName(child.code);
                 }
             });
@@ -52,38 +95,3 @@ function macroPrimitiveTypes(children) {
 //     // Return original string/file.
 //     return gerberString;
 // }
-
-/**
- * Simple parser function from @ tracespace/parser with added support for macroPrimitive names.
- *
- * @example
- * ```ts
- * import { parse } from 'parser.js';
- *
- * //Get the parsed file:
- * parse('GO4 gerber file readResults');
- * ```
- *
- * @category Parser
- */
-export function parse(readResult) {
-    const parsedData = {};
-    for (const layer in readResult.layers) {
-        const layerObject = readResult.layers[layer];
-        const parsedObject = readResult.parseTreesById[layerObject.id];
-        parsedData[layerObject.id] = {
-            fileData: { id: layerObject.id,
-                        filename: layerObject.filename,
-                        type: layerObject.type,
-                        side: layerObject.side,
-                        filetype: parsedObject.filetype
-                    },
-            children: parsedObject.children
-        };
-    }
-    for (const layerID in parsedData) {
-        const layerChildrenData = parsedData[layerID].children;
-        parsedData[layerID].children = macroPrimitiveTypes(layerChildrenData);
-    }
-    return parsedData;
-}
